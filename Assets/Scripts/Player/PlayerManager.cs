@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using Dreamteck.Splines;
 using RRC.Core;
@@ -13,6 +12,7 @@ namespace RRC.Player
         [SerializeField] private SwerveInput swerveInput;
         [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
         [SerializeField] private FinanceHandler financeHandler;
+        [SerializeField] private MoneyTextHandler moneyTextHandler;
         [SerializeField] private Transform visualContainer;
         [SerializeField] private GameObject richVisual, poorVisual;
         [SerializeField] private ParticleSystem greenParticle, redParticle;
@@ -76,6 +76,9 @@ namespace RRC.Player
             }
 
             int collectedAmount = collectable.Collect();
+            
+            financeHandler.UpdateMoney(collectedAmount);
+            moneyTextHandler.ShowMoneyText(collectedAmount);
 
             if (collectedAmount < 0)
             {
@@ -109,6 +112,7 @@ namespace RRC.Player
                     playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingP);
                     break;
                 case PlayerState.WalkingRich:
+                    playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingR);
                     break;
                 case PlayerState.Jumping:
                     break;

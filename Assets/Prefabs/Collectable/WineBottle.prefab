@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7145567771778411612}
   - component: {fileID: 8139923992162710341}
-  - component: {fileID: 7692864735683717162}
+  - component: {fileID: 3066666497300166209}
   m_Layer: 0
   m_Name: WineBottle
   m_TagString: Untagged
@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyAmount: -1
---- !u!65 &7692864735683717162
-BoxCollider:
+--- !u!135 &3066666497300166209
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -58,8 +58,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.32203454, y: 0.9739244, z: 0.40256554}
-  m_Center: {x: -0.005215138, y: 0.5762707, z: 0.19450459}
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &7145567773206149688
 PrefabInstance:
   m_ObjectHideFlags: 0

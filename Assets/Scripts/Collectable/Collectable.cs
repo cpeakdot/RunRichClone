@@ -20,6 +20,7 @@ public class Collectable : MonoBehaviour
         else
         {
             isCollected = true;
+            this.gameObject.SetActive(false);
             return moneyAmount;
         }
     }

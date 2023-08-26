@@ -8,7 +8,6 @@ namespace RRC.Player
         
         private static readonly int WalkingRich = Animator.StringToHash("IsWalkingRich");
         private static readonly int WalkingPoor = Animator.StringToHash("IsWalkingPoor");
-        private static readonly int Idle = Animator.StringToHash("Idle");
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Dance = Animator.StringToHash("Dance");
 
@@ -43,7 +42,6 @@ namespace RRC.Player
 
         private void ResetAnimatorValues()
         {
-            animator.SetBool(Idle, false);
             animator.SetBool(WalkingPoor, false);
             animator.SetBool(WalkingRich, false);
             animator.ResetTrigger(Jump);
