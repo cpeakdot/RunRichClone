@@ -109,9 +109,11 @@ namespace RRC.Player
                 case PlayerState.Idle:
                     break;
                 case PlayerState.WalkingPoor:
+                    playerAnimationHandler.SetAnimation(PlayerAnimation.Jump);
                     playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingP);
                     break;
                 case PlayerState.WalkingRich:
+                    playerAnimationHandler.SetAnimation(PlayerAnimation.Jump);
                     playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingR);
                     break;
                 case PlayerState.Jumping:
@@ -160,7 +162,8 @@ namespace RRC.Player
             splineFollower.follow = (gameState == GameState.Started);
             if (gameState == GameState.Started)
             {
-                SwitchState(PlayerState.WalkingPoor);
+                playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingP);
+                playerState = PlayerState.WalkingPoor;
             }
         }
 

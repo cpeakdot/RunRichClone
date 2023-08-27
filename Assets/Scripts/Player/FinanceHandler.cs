@@ -26,10 +26,12 @@ namespace RRC.Player
         {
             if (!isRich && currentMoneyAmount >= minAmountToBeRich)
             {
+                isRich = true;
                 OnFinancialStatusChanged?.Invoke(true);
             }
             else if(isRich && currentMoneyAmount < minAmountToBeRich)
             {
+                isRich = false;
                 OnFinancialStatusChanged?.Invoke(false);
             }
         }

@@ -2,26 +2,29 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    [SerializeField] private int moneyAmount = 1;
+    [SerializeField] protected int moneyAmount = 1;
 
-    private bool isCollected = false;
+    protected bool isCollected = false;
+
+    public bool CollectedStatus
+    {
+        get => isCollected;
+        set => isCollected = value;
+    }
 
     private void OnEnable()
     {
         isCollected = false;
     }
 
-    public int Collect()
+    public virtual int Collect()
     {
         if (isCollected)
         {
             return 0;
         }
-        else
-        {
-            isCollected = true;
-            this.gameObject.SetActive(false);
-            return moneyAmount;
-        }
+        isCollected = true;
+        this.gameObject.SetActive(false);
+        return moneyAmount;
     }
 }

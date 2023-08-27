@@ -44,7 +44,6 @@ namespace RRC.Player
         {
             animator.SetBool(WalkingPoor, false);
             animator.SetBool(WalkingRich, false);
-            animator.ResetTrigger(Jump);
         }
     }
 }
