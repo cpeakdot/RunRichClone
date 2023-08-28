@@ -4,8 +4,10 @@
     {
         Idle,
         WalkingPoor,
+        WalkingAverage,
         WalkingRich,
         Jumping,
-        Dancing
+        Dancing,
+        Crying
     }
 }

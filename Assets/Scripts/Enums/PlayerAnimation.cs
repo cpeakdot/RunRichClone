@@ -4,8 +4,11 @@
     {
         Idle,
         WalkingR,
+        WalkingA,
         WalkingP,
         Dance,
-        Jump
+        Jump,
+        JumpSad,
+        Cry
     }
 }

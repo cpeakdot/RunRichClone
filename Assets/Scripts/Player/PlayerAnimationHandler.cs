@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace RRC.Player
@@ -10,6 +11,13 @@ namespace RRC.Player
         private static readonly int WalkingPoor = Animator.StringToHash("IsWalkingPoor");
         private static readonly int Jump = Animator.StringToHash("Jump");
         private static readonly int Dance = Animator.StringToHash("Dance");
+        private static readonly int JumpSad = Animator.StringToHash("JumpSad");
+        private static readonly int Cry = Animator.StringToHash("Cry");
+
+        private void Start()
+        {
+            animator.applyRootMotion = false;
+        }
 
         public void SetAnimation(PlayerAnimation animation)
         {
@@ -26,6 +34,9 @@ namespace RRC.Player
                 case PlayerAnimation.WalkingP:
                     animator.SetBool(WalkingPoor, true);
                     break;
+                case PlayerAnimation.WalkingA:
+                    animator.SetBool(WalkingPoor, true);
+                    break;
                 case PlayerAnimation.WalkingR:
                     animator.SetBool(WalkingRich, true);
                     break;
@@ -33,7 +44,15 @@ namespace RRC.Player
                     animator.SetTrigger(Jump);
                     break;
                 case PlayerAnimation.Dance:
+                    animator.applyRootMotion = true;
                     animator.SetTrigger(Dance);
+                    break;
+                case PlayerAnimation.Cry:
+                    animator.applyRootMotion = true;
+                    animator.SetTrigger(Cry);
+                    break;
+                case PlayerAnimation.JumpSad:
+                    animator.SetTrigger(JumpSad);
                     break;
                 default:
                     break;

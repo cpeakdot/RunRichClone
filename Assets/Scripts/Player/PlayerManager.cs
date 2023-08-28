@@ -14,8 +14,9 @@ namespace RRC.Player
         [SerializeField] private FinanceHandler financeHandler;
         [SerializeField] private MoneyTextHandler moneyTextHandler;
         [SerializeField] private Transform visualContainer;
-        [SerializeField] private GameObject richVisual, poorVisual;
-        [SerializeField] private ParticleSystem greenParticle, redParticle;
+        [SerializeField] private GameObject richVisual,averageVisual, poorVisual;
+        [SerializeField] private ParticleSystem greenParticle, redParticle, levelUpParticle, levelDownParticle;
+        [SerializeField] private ParticleSystem moneyBlastParticle;
 
         [Header("Values")]
         [SerializeField] private float moveSpeed;
@@ -27,7 +28,6 @@ namespace RRC.Player
         [SerializeField] private float swerveRotationSmoother = .1f;
         
         private PlayerState playerState;
-        private bool isRich = false;
 
         private const float SCREEN_WIDTH = 1920f;
 
@@ -43,7 +43,8 @@ namespace RRC.Player
         {
             GameManager.OnGameStateUpdated += HandleOnGameStateChanged;
             splineFollower.spline = SplineManager.Instance.splineComputer;
-            SwitchVisual(false);
+            splineFollower.spline.triggerGroups[0].triggers[0].AddListener(HandleLevelEnd);
+            SwitchVisual(FinanceState.Poor);
         }
 
         private void Update()
@@ -54,6 +55,9 @@ namespace RRC.Player
                     HandleSwerve();
                     break;
                 case PlayerState.WalkingPoor:
+                    HandleSwerve();
+                    break;
+                case PlayerState.WalkingAverage:
                     HandleSwerve();
                     break;
                 case PlayerState.WalkingRich:
@@ -87,6 +91,7 @@ namespace RRC.Player
             else if(collectedAmount > 0)
             {
                 greenParticle.Play();
+                moneyBlastParticle.Play();
             }
         }
 
@@ -96,25 +101,67 @@ namespace RRC.Player
 
         private void SwitchState(PlayerState newState)
         {
+            PlayerState lastState = playerState;
             if (newState == playerState)
             {
                 return;
             }
 
             playerState = newState;
+            float spinDuration = .5f;
             switch (playerState)
             {
                 case PlayerState.Dancing:
+                    splineFollower.follow = false;
+                    visualContainer.localEulerAngles = Vector3.zero;
+                    visualContainer.DOLocalRotate(Vector3.up * 180f, spinDuration).OnComplete(() =>
+                    {
+                        playerAnimationHandler.SetAnimation(PlayerAnimation.Dance);
+                    });
+                    break;
+                case PlayerState.Crying:
+                    splineFollower.follow = false;
+                    visualContainer.localEulerAngles = Vector3.zero;
+                    visualContainer.DOLocalRotate(Vector3.up * 180f, spinDuration).OnComplete(() =>
+                    {
+                        playerAnimationHandler.SetAnimation(PlayerAnimation.Cry);
+                    });
                     break;
                 case PlayerState.Idle:
                     break;
                 case PlayerState.WalkingPoor:
-                    playerAnimationHandler.SetAnimation(PlayerAnimation.Jump);
+
+                    levelDownParticle.Play();
+                    
+                    playerAnimationHandler.SetAnimation(PlayerAnimation.JumpSad);
                     playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingP);
+                    
+                    break;
+                case PlayerState.WalkingAverage:
+                    
+                    playerAnimationHandler.SetAnimation(lastState == PlayerState.WalkingPoor 
+                        ? PlayerAnimation.Jump 
+                        : PlayerAnimation.JumpSad);
+                    
+                    if (lastState == PlayerState.WalkingPoor)
+                    {
+                        levelUpParticle.Play();
+                    }
+                    else
+                    {
+                        levelDownParticle.Play();
+                    }
+                    
+                    playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingA);
+                    
                     break;
                 case PlayerState.WalkingRich:
+
+                    levelUpParticle.Play();
+                    
                     playerAnimationHandler.SetAnimation(PlayerAnimation.Jump);
                     playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingR);
+                    
                     break;
                 case PlayerState.Jumping:
                     break;
@@ -167,25 +214,57 @@ namespace RRC.Player
             }
         }
 
-        private void HandleOnFinancialStatusChanged(bool gotRich)
+        private void HandleOnFinancialStatusChanged(FinanceState financeState)
         {
-            isRich = gotRich;
-            if (isRich)
+            SwitchVisual(financeState);
+            switch (financeState)
             {
-                SwitchVisual(true);
-                SwitchState(PlayerState.WalkingRich);
-            }
-            else
-            {
-                SwitchVisual(false);
-                SwitchState(PlayerState.WalkingPoor);
+                case FinanceState.Poor:
+                    SwitchState(PlayerState.WalkingPoor);
+                    break;
+                case FinanceState.Average:
+                    SwitchState(PlayerState.WalkingAverage);
+                    break;
+                case FinanceState.Rich:
+                    SwitchState(PlayerState.WalkingRich);
+                    break;
+                default:
+                    break;
             }
         }
 
-        private void SwitchVisual(bool rich)
+        private void SwitchVisual(FinanceState financeState)
         {
-            poorVisual.SetActive(!rich);
-            richVisual.SetActive(rich);
+            averageVisual.SetActive(false);
+            poorVisual.SetActive(false);
+            richVisual.SetActive(false);
+            
+            switch (financeState)
+            {
+                case FinanceState.Average:
+                    averageVisual.SetActive(true);
+                    break;
+                case FinanceState.Poor:
+                    poorVisual.SetActive(true);
+                    break;
+                case FinanceState.Rich:
+                    richVisual.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void HandleLevelEnd()
+        {
+            if (financeHandler.GetFinanceState == FinanceState.Poor)
+            {
+                SwitchState(PlayerState.Crying);
+            }
+            else
+            {
+                SwitchState(PlayerState.Dancing);
+            }
         }
 
         #endregion
