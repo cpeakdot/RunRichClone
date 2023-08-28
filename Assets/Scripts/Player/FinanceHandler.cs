@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using RRC.Core;
 
 namespace RRC.Player
 {
@@ -17,6 +18,8 @@ namespace RRC.Player
 
         private int currentMoneyAmount = 0;
         private int lastMoneyAmount = 0;
+
+        private readonly string MONEY_PREF_KEY = "mn__";
 
         public FinanceState GetFinanceState => financeState;
         
@@ -34,7 +37,13 @@ namespace RRC.Player
 
         public void UpdateMoney(int amount)
         {
-            currentMoneyAmount += amount;
+            currentMoneyAmount = Mathf.Max(0, amount + currentMoneyAmount);
+
+            if (currentMoneyAmount == 0)
+            {
+                GameManager.Instance.HandleGameOver(false);
+            }
+            
             CheckFinancialStatus();
             SetSliderValue(currentMoneyAmount);
         }

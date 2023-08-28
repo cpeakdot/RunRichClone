@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Dreamteck.Splines;
 using RRC.Core;
@@ -67,9 +68,17 @@ namespace RRC.Player
                     break;
                 case PlayerState.Dancing:
                     break;
+                case PlayerState.Crying:
+                    break;
                 default:
                     break;
             }
+        }
+
+        private void OnDisable()
+        {
+            financeHandler.OnFinancialStatusChanged -= HandleOnFinancialStatusChanged;
+            GameManager.OnGameStateUpdated -= HandleOnGameStateChanged;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -212,6 +221,11 @@ namespace RRC.Player
                 playerAnimationHandler.SetAnimation(PlayerAnimation.WalkingP);
                 playerState = PlayerState.WalkingPoor;
             }
+            else if (gameState == GameState.FinishedL)
+            {
+                splineFollower.follow = false;
+                SwitchState(PlayerState.Crying);
+            }
         }
 
         private void HandleOnFinancialStatusChanged(FinanceState financeState)
@@ -265,6 +279,7 @@ namespace RRC.Player
             {
                 SwitchState(PlayerState.Dancing);
             }
+            GameManager.Instance.HandleGameOver(true);
         }
 
         #endregion

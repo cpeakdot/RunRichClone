@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace RRC.Player
 {
     public class PlayerAnimationHandler : MonoBehaviour
     {
-        [SerializeField] private Animator animator;
+        [SerializeField] private Animator anim;
         
         private static readonly int WalkingRich = Animator.StringToHash("IsWalkingRich");
         private static readonly int WalkingPoor = Animator.StringToHash("IsWalkingPoor");
@@ -16,7 +15,7 @@ namespace RRC.Player
 
         private void Start()
         {
-            animator.applyRootMotion = false;
+            anim.applyRootMotion = false;
         }
 
         public void SetAnimation(PlayerAnimation animation)
@@ -32,27 +31,27 @@ namespace RRC.Player
                 case PlayerAnimation.Idle:
                     break;
                 case PlayerAnimation.WalkingP:
-                    animator.SetBool(WalkingPoor, true);
+                    anim.SetBool(WalkingPoor, true);
                     break;
                 case PlayerAnimation.WalkingA:
-                    animator.SetBool(WalkingPoor, true);
+                    anim.SetBool(WalkingPoor, true);
                     break;
                 case PlayerAnimation.WalkingR:
-                    animator.SetBool(WalkingRich, true);
+                    anim.SetBool(WalkingRich, true);
                     break;
                 case PlayerAnimation.Jump:
-                    animator.SetTrigger(Jump);
+                    anim.SetTrigger(Jump);
                     break;
                 case PlayerAnimation.Dance:
-                    animator.applyRootMotion = true;
-                    animator.SetTrigger(Dance);
+                    anim.applyRootMotion = true;
+                    anim.SetTrigger(Dance);
                     break;
                 case PlayerAnimation.Cry:
-                    animator.applyRootMotion = true;
-                    animator.SetTrigger(Cry);
+                    anim.applyRootMotion = true;
+                    anim.SetTrigger(Cry);
                     break;
                 case PlayerAnimation.JumpSad:
-                    animator.SetTrigger(JumpSad);
+                    anim.SetTrigger(JumpSad);
                     break;
                 default:
                     break;
@@ -61,8 +60,8 @@ namespace RRC.Player
 
         private void ResetAnimatorValues()
         {
-            animator.SetBool(WalkingPoor, false);
-            animator.SetBool(WalkingRich, false);
+            anim.SetBool(WalkingPoor, false);
+            anim.SetBool(WalkingRich, false);
         }
     }
 }
